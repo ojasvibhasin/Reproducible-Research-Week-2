@@ -1,0 +1,16 @@
+5. Imputing missing values
+    activity_no_NA <- activity[which(!is.na(activity$steps)),]
+    # calculate the mean steps for each interval
+    interval_only <- activity_no_NA %>% group_by(interval) %>% summarise(average=mean(steps))
+    # convert the average to integer
+    interval_only$average <- as.integer(interval_only$average)
+    #subset dataset where steps have NAs
+    activity_na <- activity[which(is.na(activity$steps)),]
+    # fill NAs with average steps based on interval
+    activity_na$steps <- ifelse(activity_na$interval==interval_only$interval,interval_only$average)
+    # row bind the datasets that do not have NAs and the dataset where NAs are replaced with
+    activity_impute <- rbind(activity_no_NA,activity_na)
+
+a. Number of missing values in the dataset
+  # subset dataset where there are no NAs
+    nrow(activity_na)
